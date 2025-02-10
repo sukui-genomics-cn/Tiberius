@@ -1060,11 +1060,11 @@ class PredictionGTF:
         # get new predictions for overlap regions
         if re_pred_inp.any():
             if clamsa_inp is not None:
-                re_pred = self.get_predictions(re_pred_inp,
+                re_pred, lstm_duration, hmm_duration = self.get_predictions(re_pred_inp,
                                                clamsa_inp=re_clamsa_inp, save=False, batch_size=batch_size,
                                                encoding_layer_oracle=re_correct_y_label if correct_y_label is not None else None)
             else:
-                re_pred = self.get_predictions(re_pred_inp, save=False, batch_size=batch_size,
+                re_pred, lstm_duration, hmm_duration = self.get_predictions(re_pred_inp, save=False, batch_size=batch_size,
                                                encoding_layer_oracle=re_correct_y_label if correct_y_label is not None else None)
 
         current_re_index = -1
