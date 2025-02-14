@@ -237,7 +237,7 @@ class GenePredHMMLayer(MsaHmmLayer):
             return viterbi(tf.expand_dims(inputs, 0), self.cell, parallel_factor=self.parallel_factor)[0]
         else:
             stacked_inputs = self.concat_inputs(inputs, nucleotides, embeddings)
-            return viterbi(stacked_inputs, self.cell, end_hints=end_hints, parallel_factor=self.parallel_factor)[0]
+            return viterbi(stacked_inputs, self.cell, end_hints=end_hints, parallel_factor=self.parallel_factor)[0] # shape: 1, 16, 9999, 10
 
 
     def get_config(self):

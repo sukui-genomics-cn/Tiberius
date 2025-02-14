@@ -120,15 +120,15 @@ class PredictionGTF:
         Args:
             summary (bool, optional): If True, prints the model summary. Defaults to True.
         """
-        if self.torch_model and os.path.exists(self.model_path):
-            self.lstm_model = TiberiusMaskedLM.from_pretrained(self.model_path)
+        if self.torch_model and os.path.exists(self.model_path_lstm):
+            self.lstm_model = TiberiusMaskedLM.from_pretrained(self.model_path_lstm)
             self.lstm_model.eval()
             self.lstm_model = self.lstm_model.to('cuda:0')
 
-            self.tokenizer = TiberiusTokenizer.from_pretrained(self.model_path)
+            self.tokenizer = TiberiusTokenizer.from_pretrained(self.model_path_lstm)
 
-            logging.info(f"Model loaded from {self.model_path}\n{print(self.lstm_model)}")
-            self.make_default_hmm()
+            logging.info(f"Model loaded from {self.model_path_lstm}\n{print(self.model_path_lstm)}")
+            # self.make_default_hmm()
 
         elif self.hmm and self.model_path_lstm:
             # only the lstm model is provided, use the default HMM Layer
@@ -748,9 +748,10 @@ class PredictionGTF:
         lstm_duration = lstm_end - start_time
         print(f"LSTM took {lstm_duration / 60} minutes to execute.")
         logging.info(f"LSTM took {lstm_duration / 60} minutes to execute.")
+        self.hmm = False # 暂时不用HMM做推理
         if not self.hmm:
             encoding_layer_pred = np.argmax(encoding_layer_pred, axis=-1)
-            return encoding_layer_pred
+            return encoding_layer_pred, lstm_duration, 0
 
         if hmm_filter:
             hmm_predictions = self.hmm_predictions_filtered(inp_chunks, encoding_layer_pred, save=save,
@@ -821,7 +822,7 @@ class PredictionGTF:
             }
         return metrics_dict
 
-    @tf.function
+    # @tf.function
     def predict_vit(self, x, y_lstm, border_hints=False):
         """Perform prediction using the Viterbi algorithm on the output of an LSTM model.
         
@@ -887,7 +888,7 @@ class PredictionGTF:
                 new_y_lstm = y_lstm
             # print(new_y_lstm.shape)
             nuc = tf.cast(x[:, :, :5], tf.float32)
-            y_vit = self.gene_pred_hmm_layer.viterbi(new_y_lstm, nucleotides=nuc)
+            y_vit = self.gene_pred_hmm_layer.viterbi(new_y_lstm, nucleotides=nuc)  # 输入5 label [intergenic, intron, exon0, exon1, exon2]
         else:
             nuc = tf.cast(x[:, :, :5], tf.float32)
             y_vit = self.gene_pred_hmm_layer.viterbi(y_lstm, nucleotides=nuc)

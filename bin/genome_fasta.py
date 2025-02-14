@@ -56,7 +56,7 @@ class GenomeSequences:
             for line in lines:
                 if line.startswith(">"):
                     seq_name = line[1:].strip().split(" ")[0].strip()
-                    if seq_name.startswith("NC"):  # only support NC_ chromosome
+                    if seq_name.startswith("NC_"):  # only support NC_ chromosome
                         chr_flag = True
                         # idx = seq_name.split(".")[0][-2:]
                         # idx = int(idx)
@@ -70,14 +70,14 @@ class GenomeSequences:
                         chr_flag = False
                     if chr_flag:
                         if current_sequence:
-                            self.sequences.append(current_sequence)
+                            self.sequences.append(current_sequence[:99999])
                             current_sequence = ""
                         self.sequence_names.append(seq_name)  # Human Seq name需要转化为chr1~24
                     else:
                         print("Skip sequence: ", seq_name)
                 elif chr_flag:
                     current_sequence += line.strip()
-            self.sequences.append(current_sequence)
+            self.sequences.append(current_sequence[:99999])
             for name, seq in zip(self.sequence_names, self.sequences):
                 print(name, len(seq))
 
