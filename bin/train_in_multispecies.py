@@ -32,9 +32,9 @@ import tensorflow.keras as keras
 from tensorflow.keras.callbacks import CSVLogger
 import models
 from models import (weighted_categorical_crossentropy, custom_cce_f1_loss, BatchLearningRateScheduler,
-                    add_hmm_only, add_hmm_layer, lm_model_phase, ValidationCallback,
-                    BatchSave, EpochSave, lstm_model, add_constant_hmm, add_transformer2lstm,
-                    transformer_model, make_weighted_cce_loss, )
+                    add_hmm_only, add_hmm_layer, ValidationCallback,
+                    BatchSave, EpochSave, lstm_model, add_constant_hmm,
+                    make_weighted_cce_loss, )
 logging.basicConfig(level=logging.INFO)
 gpus = tf.config.list_physical_devices('GPU')
 
@@ -579,7 +579,7 @@ def main():
     config_dict['model_save_dir'] = os.path.abspath(args.out)
     config_dict['model_load_lstm'] = os.path.abspath(args.load_lstm) if args.load_lstm else None
     config_dict['model_load_hmm'] = os.path.abspath(args.load_hmm) if args.load_hmm else None
-    config_dict['nuc_trans'] = args.nuc_trans
+    # config_dict['nuc_trans'] = args.nuc_trans
 
     # write config file
     with open(f'{config_dict["model_save_dir"]}/config.json', 'w+') as f:

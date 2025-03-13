@@ -79,6 +79,14 @@ class T2TTiberiusDataset(Dataset):
         else:
             pad_num = self.max_length - len(seq)
             seq += PADDING_TOKEN * pad_num
+            if isinstance(label, np.ndarray):
+                pad_label = np.zeros((pad_num, self.output_size))
+                pad_label[:, 0] = 1
+                label = np.concatenate([label, np.zeros((pad_num, self.output_size))], axis=0)
+            elif isinstance(label, list):
+                label = np.concatenate([label, np.zeros((pad_num, self.output_size))], axis=0)
+            else:
+                raise ValueError(f"Unsupported label type: {type(label)}")
             label += [PADDING_TOKEN_ID] * pad_num
         input_ids = self.tokenizer(seq)
         input_ids = np.array(input_ids, dtype=np.int64)

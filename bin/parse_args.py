@@ -27,6 +27,8 @@ def parseCmd():
         help='')
     parser.add_argument('--val_data',  type=str, default='',
         help='')
+    parser.add_argument('--dataset_name', type=str, default='',
+                        help='')
     parser.add_argument('--train_species_file',  type=str, default='train_species_filtered.txt',
         help='')
     parser.add_argument('--learnMSA',  type=str, default='../learnMSA',
