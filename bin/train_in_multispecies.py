@@ -516,7 +516,7 @@ def main():
             config_dict = json.load(f)
     else:
         config_dict = {
-            "num_epochs": 10,
+            "num_epochs": 100,
             'use_hmm': args.hmm,
             "loss_weights": False,
             # [1,1,1e3,1e3,1e3],

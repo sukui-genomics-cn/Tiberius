@@ -85,18 +85,17 @@ class T2TTiberiusDataset(Dataset):
                 label = np.concatenate([label, np.zeros((pad_num, self.output_size))], axis=0)
             elif isinstance(label, list):
                 label = np.concatenate([label, np.zeros((pad_num, self.output_size))], axis=0)
+                label = np.array(label, dtype=np.int64)
+                label = np.eye(self.output_size)[label]
             else:
                 raise ValueError(f"Unsupported label type: {type(label)}")
-            label += [PADDING_TOKEN_ID] * pad_num
         input_ids = self.tokenizer(seq)
         input_ids = np.array(input_ids, dtype=np.int64)
 
         # reduce label
         if label.shape[-1] != self.output_size:
             label = tiberius_reduce_labels(label, self.output_size)
-        # label = np.array(label, dtype=np.int64)
-        # label = np.eye(10)[label]
-        # print(f"input_ids shape: {input_ids.shape}, label shape: {label.shape}")
+
         return input_ids, label
 
     @staticmethod
