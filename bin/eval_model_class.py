@@ -6,6 +6,7 @@
 # Transformers 4.31.0
 # ==============================================================
 import logging
+from tqdm import tqdm
 import sys, json, os, re, sys, csv, time
 from genome_fasta import GenomeSequences
 from annotation_gtf import GeneStructure
@@ -498,7 +499,7 @@ class PredictionGTF:
 
         if inp_chunks.shape[0] % batch_size > 0:
             num_batches += 1
-        for i in range(num_batches):
+        for i in tqdm(range(num_batches), desc="LSTM prediction"):
             start_pos = i * batch_size
             end_pos = (i + 1) * batch_size
             if self.trans_lstm:
@@ -554,7 +555,7 @@ class PredictionGTF:
 
         if nuc_seq.shape[0] % batch_size > 0:
             num_batches += 1
-        for i in range(num_batches):
+        for i in tqdm(range(num_batches), desc="HMM prediction"):
             start_pos = i * batch_size
             end_pos = (i + 1) * batch_size
             if self.emb:
@@ -618,7 +619,7 @@ class PredictionGTF:
 
         batch_i = []
         hmm_predictions = np.zeros((inp_chunks.shape[0], inp_chunks.shape[1]), int)
-        for i in range(inp_chunks.shape[0]):
+        for i in tqdm(range(inp_chunks.shape[0]), desc="HMM prediction with Filter"):
             slide_mean = 0
             if self.emb:
                 slide_mean = sliding_window_avg(lstm_predictions[0][i], 200)[:, 0].min()
@@ -661,9 +662,10 @@ class PredictionGTF:
         Returns:
             np.ndarray: HMM predictions for all chunks.
         """
+        
         if not batch_size:
             batch_size = self.batch_size
-
+        logging.info(f"x_data shape: {inp_chunks.shape}; batch_size: {batch_size}")
         start_time = time.time()
         if encoding_layer_oracle is not None:
             encoding_layer_pred = encoding_layer_oracle
@@ -693,6 +695,7 @@ class PredictionGTF:
         print(f"LSTM took {lstm_duration / 60} minutes to execute.")
         logging.info(f"LSTM took {lstm_duration / 60} minutes to execute.")
         if not self.hmm:
+            logging.info("No HMM model provided, returning LSTM predictions.")
             encoding_layer_pred = np.argmax(encoding_layer_pred, axis=-1)
             return encoding_layer_pred
 

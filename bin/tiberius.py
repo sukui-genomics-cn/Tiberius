@@ -5,6 +5,7 @@
 # ==============================================================
 
 import sys, json, os, re, sys, csv, argparse, requests, time, logging, warnings
+from tqdm import tqdm
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 import subprocess as sp
@@ -237,12 +238,13 @@ def main():
                                                   filt=False)
             except Exception as e:
                 logging.warning(f'ERROR strand: {s_}, seq:{seq}, error: {e}')
-                logging.info(f"starting to write the annotation to {gtf_out}")
+
 
     # Load the genome sequence from the FASTA file
     genome = SeqIO.to_dict(SeqIO.parse(genome_path, "fasta"))
     anno_outp = Anno('', f'anno')
     out_tx = {}
+    logging.info(f"starting to get transcripts")
     for tx_id, tx in anno.transcripts.items():
         exons = tx.get_type_coords('CDS', frame=False)
         filt = False
@@ -264,6 +266,7 @@ def main():
     anno_outp.rename_tx_ids()
     anno_outp.write_anno(gtf_out)
 
+    logging.info(f"starting to write file")
     prot_seq_out = ""
     coding_seq_out = ""
     if args.protseq or args.codingseq:
