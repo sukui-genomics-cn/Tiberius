@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Run Tiberius",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/tiberius.py",
+            "args": [
+                "--learnMSA",
+                "${workspaceFolder}/learnMSA",
+                "--model",
+                "${workspaceFolder}/weights/tiberius_weights",
+                "--genome",
+                "/home/share/huadjyin/home/yinpeng/dataset/sukui/gene_structure/EvalDatasets/Homo_Sapiens/GCF_000001405.40_GRCh38.p14_genomic.chr21.fna",
+                "--batch_size",
+                "2",
+                "--out",
+                "${workspaceFolder}/outputs/tiberius.hmm_homo/tiberius.hmm_homo.500k.chr21_0506.gtf"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}",
+                "CUDA_VISIBLE_DEVICES":"0"
+            }
+        }
+    ],
+    "tasks": [
+        {
+            "label": "create-output-dir",
+            "type": "shell",
+            "command": "mkdir -p ${workspaceFolder}/outputs/tiberius.hmm_homo"
+        }
+    ]
+}

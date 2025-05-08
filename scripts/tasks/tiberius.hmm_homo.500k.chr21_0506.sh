@@ -23,6 +23,7 @@ python bin/tiberius.py \
     --learnMSA $learnMSA \
     --model $ckpt \
     --genome $fasta_path \
+    --batch_size 2 \
     --out $save_path/tiberius.hmm_homo.500k.chr21_0506.gtf
 
 

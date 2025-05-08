@@ -17,7 +17,7 @@ import tensorflow as tf
 from Bio import SeqIO
 from Bio.Seq import Seq
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 import tensorflow as tf
 

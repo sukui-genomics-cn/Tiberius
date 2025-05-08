@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class GenomeSequences:
     def __init__(self, fasta_file='', np_file='', chunksize=20000, overlap=1000):
