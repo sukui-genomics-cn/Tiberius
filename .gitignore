@@ -133,3 +133,5 @@ dmypy.json
 /weights/
 /learnMSA_abadon/
 /learnMSA_tmp/
+logs/
+
