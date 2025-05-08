@@ -748,7 +748,6 @@ class PredictionGTF:
         lstm_duration = lstm_end - start_time
         print(f"LSTM took {lstm_duration / 60} minutes to execute.")
         logging.info(f"LSTM took {lstm_duration / 60} minutes to execute.")
-        self.hmm = False # 暂时不用HMM做推理
         if not self.hmm:
             encoding_layer_pred = np.argmax(encoding_layer_pred, axis=-1)
             return encoding_layer_pred, lstm_duration, 0
@@ -822,7 +821,7 @@ class PredictionGTF:
             }
         return metrics_dict
 
-    # @tf.function
+    @tf.function
     def predict_vit(self, x, y_lstm, border_hints=False):
         """Perform prediction using the Viterbi algorithm on the output of an LSTM model.
         

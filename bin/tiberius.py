@@ -113,8 +113,9 @@ def main():
         'Tiberius_denovo': 'https://bioinf.uni-greifswald.de/bioinf/tiberius/models//tiberius_denovo_weights.tgz'
     }
     print(f"learMSA path: {args.learnMSA}")
+
     sys.path.insert(0, args.learnMSA)
-    from eval_model_class_torch import PredictionGTF
+    from eval_model_class import PredictionGTF
     from models import make_weighted_cce_loss
     from genome_anno import Anno
 
@@ -203,7 +204,6 @@ def main():
             genome_path=genome_path,
             softmask=not args.no_softmasking, strand=s_,
             parallel_factor=args.parallel_factor,
-            torch_model=args.torch_model
             # lstm_cfg=args.lstm_cfg,
         )
 
@@ -217,27 +217,27 @@ def main():
                                      t=50000400, chunk_size=seq_len)
 
         for k, seq in enumerate(seq_groups):
-            # try:
-            logging.info(f'Tiberius gene prediciton {k + 1 + len(seq_groups) * j}/{len(strand) * len(seq_groups)} ')
-            logging.info(f"Processing sequence {seq}. strand {s_}...")
-            x_data, coords = pred_gtf.load_genome_data(genome_fasta, seq,
-                                                       softmask=softmasking, strand=s_)
-            print(x_data.shape)
-            clamsa = None
-            if clamsa_prefix:
-                clamsa = pred_gtf.load_clamsa_data(clamsa_prefix=clamsa_prefix, seq_names=seq,
-                                                   strand=s_, chunk_len=seq_len, pad=True)
+            try:
+                logging.info(f'Tiberius gene prediciton {k + 1 + len(seq_groups) * j}/{len(strand) * len(seq_groups)} ')
+                logging.info(f"Processing sequence {seq}. strand {s_}...")
+                x_data, coords = pred_gtf.load_genome_data(genome_fasta, seq,
+                                                           softmask=softmasking, strand=s_)
+                print(x_data.shape)
+                clamsa = None
+                if clamsa_prefix:
+                    clamsa = pred_gtf.load_clamsa_data(clamsa_prefix=clamsa_prefix, seq_names=seq,
+                                                       strand=s_, chunk_len=seq_len, pad=True)
 
-            hmm_pred, lstm_duration, hmm_duration = pred_gtf.get_predictions(x_data, hmm_filter=True,
-                                                                             clamsa_inp=clamsa)
-            lstm_duration += hmm_duration
-            hmm_time += hmm_duration
-            anno, tx_id = pred_gtf.create_gtf(y_label=hmm_pred, coords=coords, f_chunks=x_data,
-                                              clamsa_inp=clamsa, strand=s_, anno=anno, tx_id=tx_id,
-                                              filt=False)
-            # except Exception as e:
-            #     logging.warning(f'ERROR strand: {s_}, seq:{seq}, error: {e}')
-            #     logging.info(f"starting to write the annotation to {gtf_out}")
+                hmm_pred, lstm_duration, hmm_duration = pred_gtf.get_predictions(x_data, hmm_filter=True,
+                                                                                 clamsa_inp=clamsa)
+                lstm_duration += hmm_duration
+                hmm_time += hmm_duration
+                anno, tx_id = pred_gtf.create_gtf(y_label=hmm_pred, coords=coords, f_chunks=x_data,
+                                                  clamsa_inp=clamsa, strand=s_, anno=anno, tx_id=tx_id,
+                                                  filt=False)
+            except Exception as e:
+                logging.warning(f'ERROR strand: {s_}, seq:{seq}, error: {e}')
+                logging.info(f"starting to write the annotation to {gtf_out}")
 
     # Load the genome sequence from the FASTA file
     genome = SeqIO.to_dict(SeqIO.parse(genome_path, "fasta"))

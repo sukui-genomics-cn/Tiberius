@@ -70,14 +70,14 @@ class GenomeSequences:
                         chr_flag = False
                     if chr_flag:
                         if current_sequence:
-                            self.sequences.append(current_sequence[:99999])
+                            self.sequences.append(current_sequence)
                             current_sequence = ""
                         self.sequence_names.append(seq_name)  # Human Seq name需要转化为chr1~24
                     else:
                         print("Skip sequence: ", seq_name)
                 elif chr_flag:
                     current_sequence += line.strip()
-            self.sequences.append(current_sequence[:99999])
+            self.sequences.append(current_sequence)
             for name, seq in zip(self.sequence_names, self.sequences):
                 print(name, len(seq))
 
