@@ -1,7 +1,7 @@
 #!/bin/bash
 #DSUB -n tiberius-hmm_homo-500k-full_0506
-#DSUB -A root.project.P24Z10200N0983_tmp
-#DSUB -R 'cpu=64;gpu=1;mem=120000'
+#DSUB -A root.project.P24Z10200N0983
+#DSUB -R 'cpu=32;gpu=1;mem=100000'
 #DSUB -N 1
 #DSUB -eo /home/share/huadjyin/home/s_sukui/03_project/01_GeneLLM/Tiberius/logs/tiberius.hmm_homo.500k.full_0506.%J.%I.err
 #DSUB -oo /home/share/huadjyin/home/s_sukui/03_project/01_GeneLLM/Tiberius/logs/tiberius.hmm_homo.500k.full_0506.%J.%I.out

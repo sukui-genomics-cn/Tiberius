@@ -216,7 +216,7 @@ class GenomeSequences:
 
         chunks_one_hot = np.array(chunks_one_hot, dtype=np.uint8)
         if strand == '-':
-            chunks_one_hot = chunks_one_hot[::-1, ::-1, [3, 2, 1, 0, 4, 5]]
+            chunks_one_hot = chunks_one_hot[::-1, ::-1, [3, 2, 1, 0, 4, 5]] # 反向互补
             chunk_coords.reverse()
         if coords:
             return chunks_one_hot, chunk_coords
