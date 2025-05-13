@@ -5,7 +5,7 @@ import numpy as np
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class GenomeSequences:
-    def __init__(self, fasta_file='', np_file='', chunksize=20000, overlap=1000):
+    def __init__(self, fasta_file='', np_file='', chunksize=20000, overlap=1000, chr_prefix="NC_"):
         """Initialize the GenomeSequences object.
 
         Arguments:
@@ -25,7 +25,7 @@ class GenomeSequences:
         self.chunks_one_hot = None
         self.chunks_seq = None
         if self.fasta_file:
-            self.read_fasta()
+            self.read_fasta(chr_prefix=chr_prefix)
         else:
             self.load_np_array(self.np_file)
         # self.encode_sequences()
@@ -47,17 +47,18 @@ class GenomeSequences:
     #                 current_sequence += line.strip()
     #         self.sequences.append(current_sequence)
 
-    def read_fasta(self):
+    def read_fasta(self, chr_prefix="NC_"):
         """Read genome sequences from the specified FASTA file.
         """
         chr_flag = True
+        logging.info(f"Reading FASTA file: {self.fasta_file}, start_prefix: {chr_prefix}")
         with open(self.fasta_file, "r") as file:
             lines = file.readlines()
             current_sequence = ""
             for line in lines:
                 if line.startswith(">"):
                     seq_name = line[1:].strip().split(" ")[0].strip()
-                    if seq_name.startswith("NC_"):  # only support NC_ chromosome
+                    if seq_name.startswith(chr_prefix):  # only support NC_ chromosome
                         chr_flag = True
                         # idx = seq_name.split(".")[0][-2:]
                         # idx = int(idx)

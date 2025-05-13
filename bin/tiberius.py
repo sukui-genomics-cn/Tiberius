@@ -211,7 +211,9 @@ def main():
         pred_gtf.load_model(summary=j == 0)
 
         genome_fasta = pred_gtf.init_fasta(genome_path=genome_path,
-                                           chunk_len=seq_len)
+                                           chunk_len=seq_len,
+                                           chr_prefix=args.chr_prefix
+                                           )
 
         seq_groups = group_sequences(genome_fasta.sequence_names,
                                      [len(s) for s in genome_fasta.sequences],
@@ -329,6 +331,9 @@ def parseCmd():
                         help='Output GTF file with Tiberius gene prediction.', default='./')
     parser.add_argument('--genome', type=str, default='',
                         help='Genome sequence file in FASTA format.')
+    # args.chr_prefix
+    parser.add_argument('--chr_prefix', type=str, default='NC_',
+                        help='Chromosome prefix in the genome sequence file. Default: NC_')
     parser.add_argument('--parallel_factor', type=int, default=817,
                         help='Parallel factor used in Viterbi. Use the factor of w_size that is closest to sqrt(w_size) (817 works well for 500004)')
     parser.add_argument('--learnMSA', type=str, default='../learnMSA',

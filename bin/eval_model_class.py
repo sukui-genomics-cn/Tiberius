@@ -263,7 +263,7 @@ class PredictionGTF:
             axis=-1, name='concat_outp')
         return Model(inputs=[nuc_input, trans_input], outputs=x)
 
-    def init_fasta(self, genome_path=None, chunk_len=None, strand=None):
+    def init_fasta(self, genome_path=None, chunk_len=None, strand=None, chr_prefix="NC_"):
         if genome_path is None:
             genome_path = self.genome_path
         if chunk_len is None:
@@ -271,7 +271,9 @@ class PredictionGTF:
 
         fasta = GenomeSequences(fasta_file=genome_path,
                                 chunksize=chunk_len,
-                                overlap=0)
+                                overlap=0,
+                                chr_prefix=chr_prefix
+                                )
         return fasta
 
     def load_genome_data(self, fasta_object, seq_names, strand='', softmask=True):

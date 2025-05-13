@@ -1,0 +1,32 @@
+#!/bin/bash
+
+export CUDA_VISIBLE_DEVICES=3
+root=/home/share/huadjyin/home/s_sukui/03_project/01_GeneLLM/Tiberius
+cd $root
+
+ckpt=$root/weights/tiberius_weights
+learnMSA=$root/learnMSA
+fasta_path=/home/share/huadjyin/home/s_sukui/02_data/gene_structure/EvalDatasets/Danio_reio/Danio_rerio_longest.chr25.tiberius.fna
+save_path=$root/outputs/danio.rerio_tiberius.hmm
+
+if [ ! -d save_path  ];then
+  mkdir -p $save_path
+else
+  echo $save_path exist
+fi
+
+echo "fast: $fasta_path"
+echo "output path: $save_path"
+start_time=$(date +%s.%N)
+
+python bin/tiberius.py \
+    --learnMSA $learnMSA \
+    --model $ckpt \
+    --genome $fasta_path \
+    --batch_size 2 \
+    --out $save_path/danio.rerio.chr25_.tiberius.hmm.500k_0512.gtf
+
+
+stage1_end=$(date +%s.%N)
+stage1_time=$(echo "$stage1_end - $start_time" | bc)
+echo "耗时: $stage1_time 秒"
