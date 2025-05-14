@@ -251,10 +251,10 @@ def main():
         exons = tx.get_type_coords('CDS', frame=False)
         filt = False
 
-        # filter out tx with inframe stop codons
-        coding_seq, prot_seq = assemble_transcript(exons, genome[tx.chr], tx.strand)
-        if not coding_seq or check_in_frame_stop_codons(prot_seq):
-            filt = True
+        # # filter out tx with inframe stop codons
+        # coding_seq, prot_seq = assemble_transcript(exons, genome[tx.chr], tx.strand)
+        # if not coding_seq or check_in_frame_stop_codons(prot_seq):
+        #     filt = True
         # filter out transcripts with cds len shorter than args.filter_short
         if not filt and tx.get_cds_len() < 201:
             filt = True
