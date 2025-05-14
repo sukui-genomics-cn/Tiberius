@@ -252,6 +252,7 @@ def main():
         filt = False
 
         # # filter out tx with inframe stop codons
+        # NOTE: dont use this condition to filter: https://alidocs.dingtalk.com/i/nodes/dpYLaezmVNLdXKyoUaKoB1o98rMqPxX6?utm_scene=team_space
         # coding_seq, prot_seq = assemble_transcript(exons, genome[tx.chr], tx.strand)
         # if not coding_seq or check_in_frame_stop_codons(prot_seq):
         #     filt = True
